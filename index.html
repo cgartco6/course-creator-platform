@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Course Creator Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4bb543;
+            --warning: #ffcc00;
+            --danger: #dc3545;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        
+        nav a:hover {
+            opacity: 0.8;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+            background: linear-gradient(rgba(67, 97, 238, 0.05), rgba(67, 97, 238, 0.1));
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: var(--gray);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            padding: 2rem 0;
+        }
+        
+        .course-creator {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .format-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .format-option {
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .format-option:hover {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .format-option.active {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .content-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .content-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background-color: var(--light-gray);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .content-type input {
+            margin: 0;
+        }
+        
+        .ai-settings {
+            background-color: rgba(76, 201, 240, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .ai-settings h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .slider-container {
+            margin: 1rem 0;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--light-gray);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .card h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .trending-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .topic-tag {
+            background-color: var(--light-gray);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .topic-tag:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .preview-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-top: 2rem;
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .preview-content {
+            border: 1px dashed var(--light-gray);
+            border-radius: 8px;
+            padding: 1.5rem;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--gray);
+        }
+        
+        .preview-content i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--light-gray);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 2rem;
+        }
+        
+        .btn-large {
+            padding: 12px 24px;
+            font-size: 1.1rem;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-column h4 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-column a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #495057;
+            color: #adb5bd;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .format-options {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>CourseCreator AI</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Explore</a></li>
+                        <li><a href="#">My Courses</a></li>
+                        <li><a href="#">Resources</a></li>
+                        <li><a href="#">Pricing</a></li>
+                    </ul>
+                </nav>
+                <div class="user-actions">
+                    <button class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> Login</button>
+                    <button class="btn btn-primary"><i class="fas fa-user-plus"></i> Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Create Any Course With Advanced AI</h1>
+            <p>Transform your knowledge into engaging courses with our AI-powered platform. Generate content, videos, quizzes, and more in minutes.</p>
+            <button class="btn btn-primary btn-large"><i class="fas fa-rocket"></i> Start Creating</button>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="course-creator">
+                <h2>Create Your Course</h2>
+                <p class="description">Describe what you want your course to be about and let our AI do the rest.</p>
+                
+                <div class="form-group">
+                    <label for="course-title">Course Title</label>
+                    <input type="text" id="course-title" class="form-control" placeholder="e.g., Advanced Web Development with React">
+                </div>
+                
+                <div class="form-group">
+                    <label for="course-description">Course Description</label>
+                    <textarea id="course-description" class="form-control" placeholder="Describe in detail what you want your course to cover..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Select Format</label>
+                    <div class="format-options">
+                        <div class="format-option active">Web</div>
+                        <div class="format-option">Web3</div>
+                        <div class="format-option">Python</div>
+                        <div class="format-option">React</div>
+                        <div class="format-option">WordPress</div>
+                        <div class="format-option">HTML5</div>
+                        <div class="format-option">JavaScript</div>
+                        <div class="format-option">Node.js</div>
+                        <div class="format-option">Blockchain</div>
+                        <div class="format-option">AI/ML</div>
+                        <div class="format-option">Data Science</div>
+                        <div class="format-option">Mobile</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Content Types to Include</label>
+                    <div class="content-types">
+                        <div class="content-type">
+                            <input type="checkbox" id="videos" checked>
+                            <label for="videos"><i class="fas fa-video"></i> Videos</label>
+                        </div>
+                        <div class="content-type">
+                            <input type="checkbox" id="photos" checked>
+                            <label for="photos"><i class="fas fa-image"></i> Photos</label>
+                        </div>
+                        <div class="content-type">
+                            <input type="checkbox" id="reels">
+                            <label for="reels"><i class="fas fa-film"></i> Reels/Shorts</label>
+                        </div>
+                        <div class="content-type">
+                            <input type="checkbox" id="voice" checked>
+                            <label for="voice"><i class="fas fa-microphone"></i> Voice</label>
+                        </div>
+                        <div class="content-type">
+                            <input type="checkbox" id="documents" checked>
+                            <label for="documents"><i class="fas fa-file-alt"></i> Documents</label>
+                        </div>
+                        <div class="content-type">
+                            <input type="checkbox" id="quizzes" checked>
+                            <label for="quizzes"><i class="fas fa-question-circle"></i> Quizzes</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ai-settings">
+                    <h3><i class="fas fa-robot"></i> AI Configuration</h3>
+                    <div class="form-group">
+                        <label for="ai-creativity">AI Creativity Level</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="7" class="slider" id="ai-creativity">
+                            <div class="slider-labels">
+                                <span>More Factual</span>
+                                <span>Balanced</span>
+                                <span>More Creative</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content-depth">Content Depth</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="8" class="slider" id="content-depth">
+                            <div class="slider-labels">
+                                <span>Beginner</span>
+                                <span>Intermediate</span>
+                                <span>Advanced</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="course-style">Course Style</label>
+                        <select id="course-style" class="form-control">
+                            <option value="traditional">Traditional Academic</option>
+                            <option value="modern" selected>Modern Interactive</option>
+                            <option value="storytelling">Storytelling Approach</option>
+                            <option value="hands-on">Hands-on Practical</option>
+                            <option value="fast-paced">Fast-paced Intensive</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary btn-large"><i class="fas fa-magic"></i> Generate Course Outline</button>
+                    <button class="btn btn-success btn-large"><i class="fas fa-play-circle"></i> Create Full Course</button>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="card">
+                    <h3><i class="fas fa-fire"></i> Trending Topics</h3>
+                    <div class="trending-topics">
+                        <div class="topic-tag">Web3 Development</div>
+                        <div class="topic-tag">AI Prompt Engineering</div>
+                        <div class="topic-tag">Cybersecurity</div>
+                        <div class="topic-tag">Digital Marketing</div>
+                        <div class="topic-tag">UX/UI Design</div>
+                        <div class="topic-tag">Data Analytics</div>
+                        <div class="topic-tag">Cloud Computing</div>
+                        <div class="topic-tag">Blockchain</div>
+                        <div class="topic-tag">AR/VR Development</div>
+                        <div class="topic-tag">Ethical Hacking</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-gem"></i> Rare Skills</h3>
+                    <div class="trending-topics">
+                        <div class="topic-tag">Quantum Computing</div>
+                        <div class="topic-tag">Bioinformatics</div>
+                        <div class="topic-tag">Digital Forensics</div>
+                        <div class="topic-tag">Robotics Programming</div>
+                        <div class="topic-tag">Game Theory</div>
+                        <div class="topic-tag">Cryptography</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-chart-line"></i> Course Stats</h3>
+                    <p><strong>Courses Created:</strong> 12,458</p>
+                    <p><strong>Active Learners:</strong> 89,234</p>
+                    <p><strong>AI Content Generated:</strong> 4.2TB</p>
+                    <p><strong>Average Rating:</strong> 4.7/5.0</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="preview-card">
+            <div class="preview-header">
+                <h3>Course Preview</h3>
+                <button class="btn btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+            <div class="preview-content">
+                <i class="fas fa-eye"></i>
+                <h4>Your course preview will appear here</h4>
+                <p>After generating your course outline, you'll see a preview of the structure and content here.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>CourseCreator AI</h4>
+                    <p>Transforming education with advanced AI technology. Create, share, and monetize your knowledge.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Examples</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Partners</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 CourseCreator AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Format selection
+        const formatOptions = document.querySelectorAll('.format-option');
+        formatOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                formatOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+            });
+        });
+        
+        // AI Configuration Sliders
+        const creativitySlider = document.getElementById('ai-creativity');
+        const depthSlider = document.getElementById('content-depth');
+        
+        creativitySlider.addEventListener('input', updateSliderValue);
+        depthSlider.addEventListener('input', updateSliderValue);
+        
+        function updateSliderValue(e) {
+            const value = e.target.value;
+            // In a real app, this would update the AI configuration
+            console.log(`Slider ${e.target.id} updated to: ${value}`);
+        }
+        
+        // Course generation
+        const generateBtn = document.querySelector('.btn-primary.btn-large');
+        const createBtn = document.querySelector('.btn-success.btn-large');
+        
+        generateBtn.addEventListener('click', generateCourseOutline);
+        createBtn.addEventListener('click', createFullCourse);
+        
+        function generateCourseOutline() {
+            const title = document.getElementById('course-title').value;
+            const description = document.getElementById('course-description').value;
+            
+            if (!title || !description) {
+                alert('Please fill in both course title and description');
+                return;
+            }
+            
+            // Show loading state
+            generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            generateBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Update preview
+                const previewContent = document.querySelector('.preview-content');
+                previewContent.innerHTML = `
+                    <h4>Course Outline: ${title}</h4>
+                    <div style="text-align: left; width: 100%;">
+                        <p><strong>Module 1:</strong> Introduction to ${title.split(' ')[0]}</p>
+                        <p><strong>Module 2:</strong> Core Concepts and Fundamentals</p>
+                        <p><strong>Module 3:</strong> Advanced Techniques</p>
+                        <p><strong>Module 4:</strong> Practical Applications</p>
+                        <p><strong>Module 5:</strong> Final Project & Next Steps</p>
+                    </div>
+                    <p style="margin-top: 15px;">The AI has generated a comprehensive course outline with 5 modules and 25 lessons.</p>
+                `;
+                
+                // Reset button
+                generateBtn.innerHTML = '<i class="fas fa-magic"></i> Generate Course Outline';
+                generateBtn.disabled = false;
+            }, 2000);
+        }
+        
+        function createFullCourse() {
+            const title = document.getElementById('course-title').value;
+            const description = document.getElementById('course-description').value;
+            
+            if (!title || !description) {
+                alert('Please fill in both course title and description');
+                return;
+            }
+            
+            // Show loading state
+            createBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Course...';
+            createBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                alert(`Course "${title}" created successfully! You can now edit and publish it.`);
+                
+                // Reset button
+                createBtn.innerHTML = '<i class="fas fa-play-circle"></i> Create Full Course';
+                createBtn.disabled = false;
+            }, 3000);
+        }
+        
+        // Trending topic selection
+        const topicTags = document.querySelectorAll('.topic-tag');
+        topicTags.forEach(tag => {
+            tag.addEventListener('click', () => {
+                const topic = tag.textContent;
+                document.getElementById('course-title').value = `Complete Guide to ${topic}`;
+                document.getElementById('course-description').value = `A comprehensive course covering all aspects of ${topic}. From fundamentals to advanced concepts, this course will give you complete mastery of ${topic}.`;
+                
+                // Scroll to course creator
+                document.querySelector('.course-creator').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
