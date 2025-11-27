@@ -1,0 +1,90 @@
+{
+  "short_name": "CourseCreator AI",
+  "name": "CourseCreator AI - Create Courses with Advanced AI",
+  "description": "Transform your knowledge into engaging courses with AI-powered content generation",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "maskable_icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#4361ee",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["education", "productivity"],
+  "screenshots": [
+    {
+      "src": "screenshot1.png",
+      "type": "image/png",
+      "sizes": "1280x720",
+      "form_factor": "wide",
+      "label": "Course Creation Dashboard"
+    },
+    {
+      "src": "screenshot2.png",
+      "type": "image/png",
+      "sizes": "750x1334",
+      "form_factor": "narrow",
+      "label": "Mobile Course Editor"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Create New Course",
+      "short_name": "New Course",
+      "description": "Start creating a new course with AI",
+      "url": "/create-course",
+      "icons": [
+        {
+          "src": "icon-create.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "My Courses",
+      "short_name": "Courses",
+      "description": "View and manage your courses",
+      "url": "/my-courses",
+      "icons": [
+        {
+          "src": "icon-courses.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View your course analytics and stats",
+      "url": "/dashboard",
+      "icons": [
+        {
+          "src": "icon-dashboard.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}
