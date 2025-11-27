@@ -1,0 +1,40 @@
+# CourseCreator AI Platform - Robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://coursecreator.ai/sitemap.xml
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+
+User-agent: Slurp
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+
+# Disallow sensitive areas
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /settings/
+Disallow: /account/
+
+# Allow public content
+Allow: /courses/
+Allow: /learn/
+Allow: /public/
+
+# Crawl delay (optional)
+Crawl-delay: 1
