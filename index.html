@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourseCreator AI - Create Infinite Courses</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4bb543;
+            --warning: #ffcc00;
+            --danger: #dc3545;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f7fb;
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 999;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 1rem 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 1.5rem;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            border-right: 3px solid var(--primary);
+        }
+
+        .sidebar-menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 80px 20px 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-info h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .stat-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Course Grid */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-image {
+            height: 160px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .course-content {
+            padding: 1.5rem;
+        }
+
+        .course-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .course-description {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+
+        .badge-success {
+            background-color: rgba(75, 181, 67, 0.1);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background-color: rgba(255, 204, 0, 0.1);
+            color: #b38f00;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 6px;
+            background-color: var(--light-gray);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        /* Activity List */
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            margin-bottom: 5px;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* AI Course Generator */
+        .ai-generator {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .ai-generator h2 {
+            margin-bottom: 1rem;
+        }
+
+        .ai-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 1.5rem 0;
+        }
+
+        .ai-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .ai-option:hover, .ai-option.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .ai-option i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .generation-status {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: var(--dark);
+            display: none;
+        }
+
+        .status-bar {
+            height: 6px;
+            background: var(--light-gray);
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .status-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1001;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 998;
+                display: none;
+            }
+
+            .overlay.active {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ai-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                padding: 0 15px;
+            }
+
+            .main-content {
+                padding: 80px 15px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>CourseCreator AI</span>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Overlay for mobile -->
+    <div class="overlay" id="overlay"></div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>CourseCreator</span>
+                </div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="nav-link active" data-section="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-section="courses"><i class="fas fa-book-open"></i> My Courses</a></li>
+                <li><a href="#" class="nav-link" data-section="create"><i class="fas fa-plus-circle"></i> Create Course</a></li>
+                <li><a href="#" class="nav-link" data-section="ai-generator"><i class="fas fa-robot"></i> AI Course Generator</a></li>
+                <li><a href="#" class="nav-link" data-section="analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                <li><a href="#" class="nav-link" data-section="students"><i class="fas fa-users"></i> Students</a></li>
+                <li><a href="#" class="nav-link" data-section="settings"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <!-- Welcome Section -->
+                <div class="card" style="margin-bottom: 30px;">
+                    <div class="card-header">
+                        <h2 class="card-title">Welcome to CourseCreator AI</h2>
+                        <a href="#" class="btn btn-primary nav-link" data-section="create"><i class="fas fa-plus"></i> Create New Course</a>
+                    </div>
+                    <p>Create amazing courses with our AI-powered platform. Generate content, videos, quizzes, and more in minutes.</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(67, 97, 238, 0.1); color: var(--primary);">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-courses">12</h3>
+                            <p>Total Courses</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(75, 181, 67, 0.1); color: var(--success);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-students">1,248</h3>
+                            <p>Total Students</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(255, 204, 0, 0.1); color: #b38f00;">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="avg-rating">4.8</h3>
+                            <p>Average Rating</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(220, 53, 69, 0.1); color: var(--danger);">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="completion-rate">86%</h3>
+                            <p>Completion Rate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Grid -->
+                <div class="dashboard-grid">
+                    <!-- Recent Courses -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Recent Courses</h2>
+                            <a href="#" class="btn btn-outline nav-link" data-section="courses">View All</a>
+                        </div>
+                        <div id="recent-courses" class="course-grid">
+                            <!-- Courses will be dynamically added here -->
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Quick Actions</h2>
+                        </div>
+                        <div style="display: grid; gap: 15px;">
+                            <a href="#" class="btn btn-primary nav-link" data-section="create" style="justify-content: center;">
+                                <i class="fas fa-plus-circle"></i> Create New Course
+                            </a>
+                            <a href="#" class="btn btn-outline nav-link" data-section="ai-generator" style="justify-content: center;">
+                                <i class="fas fa-robot"></i> AI Course Generator
+                            </a>
+                            <a href="#" class="btn btn-outline nav-link" data-section="analytics" style="justify-content: center;">
+                                <i class="fas fa-chart-bar"></i> View Analytics
+                            </a>
+                            <a href="#" class="btn btn-outline nav-link" data-section="settings" style="justify-content: center;">
+                                <i class="fas fa-cog"></i> Course Settings
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Recent Activity</h2>
+                        </div>
+                        <ul class="activity-list">
+                            <li class="activity-item">
+                                <div class="activity-icon" style="background: var(--primary);">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="activity-text">New student enrolled in "Advanced Web Development"</p>
+                                    <span class="activity-time">2 hours ago</span>
+                                </div>
+                            </li>
+                            <li class="activity-item">
+                                <div class="activity-icon" style="background: var(--success);">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="activity-text">Received a 5-star review for "AI & Machine Learning"</p>
+                                    <span class="activity-time">5 hours ago</span>
+                                </div>
+                            </li>
+                            <li class="activity-item">
+                                <div class="activity-icon" style="background: var(--accent);">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="activity-text">Course "Web Development Basics" completed by 15 students</p>
+                                    <span class="activity-time">1 day ago</span>
+                                </div>
+                            </li>
+                            <li class="activity-item">
+                                <div class="activity-icon" style="background: var(--warning);">
+                                    <i class="fas fa-comment"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="activity-text">New comment on "Data Science Fundamentals"</p>
+                                    <span class="activity-time">2 days ago</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- AI Recommendations -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">AI Recommendations</h2>
+                            <span class="badge badge-primary">AI</span>
+                        </div>
+                        <p style="margin-bottom: 15px;">Based on your content and student feedback, we recommend:</p>
+                        <ul style="padding-left: 20px; margin-bottom: 20px;">
+                            <li style="margin-bottom: 10px;">Add more practical exercises to Module 3</li>
+                            <li style="margin-bottom: 10px;">Consider creating a video on Web3 development</li>
+                            <li style="margin-bottom: 10px;">Update React course with latest features</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline nav-link" data-section="ai-generator" style="width: 100%; justify-content: center;">
+                            <i class="fas fa-magic"></i> Generate AI Content
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- My Courses Section -->
+            <section id="courses" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">My Courses</h2>
+                        <div>
+                            <a href="#" class="btn btn-outline nav-link" data-section="create"><i class="fas fa-plus"></i> Create Course</a>
+                            <a href="#" class="btn btn-primary nav-link" data-section="ai-generator"><i class="fas fa-robot"></i> AI Generator</a>
+                        </div>
+                    </div>
+                    <div id="all-courses" class="course-grid">
+                        <!-- All courses will be dynamically added here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Create Course Section -->
+            <section id="create" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Create New Course</h2>
+                        <a href="#" class="btn btn-primary nav-link" data-section="ai-generator"><i class="fas fa-robot"></i> Use AI Generator</a>
+                    </div>
+                    
+                    <form id="course-form">
+                        <div class="form-group">
+                            <label class="form-label">Course Title</label>
+                            <input type="text" class="form-control" id="course-title" placeholder="Enter course title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Course Description</label>
+                            <textarea class="form-control" id="course-description" rows="4" placeholder="Describe what students will learn" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select class="form-control" id="course-category" required>
+                                <option value="">Select a category</option>
+                                <option value="web">Web Development</option>
+                                <option value="ai">AI & Machine Learning</option>
+                                <option value="data">Data Science</option>
+                                <option value="mobile">Mobile Development</option>
+                                <option value="design">Design</option>
+                                <option value="business">Business</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Difficulty Level</label>
+                            <select class="form-control" id="course-level" required>
+                                <option value="">Select difficulty</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create Course</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- AI Course Generator Section -->
+            <section id="ai-generator" class="content-section">
+                <div class="ai-generator">
+                    <h2><i class="fas fa-robot"></i> AI Course Generator</h2>
+                    <p>Generate infinite courses automatically with our advanced AI. Select a category and let AI create complete courses for you.</p>
+                    
+                    <div class="ai-options">
+                        <div class="ai-option active" data-type="trending">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>Trending Courses</h3>
+                            <p>Latest in-demand skills</p>
+                        </div>
+                        <div class="ai-option" data-type="rare">
+                            <i class="fas fa-gem"></i>
+                            <h3>Rare Skills</h3>
+                            <p>Specialized niche topics</p>
+                        </div>
+                        <div class="ai-option" data-type="traditional">
+                            <i class="fas fa-tools"></i>
+                            <h3>Traditional Trades</h3>
+                            <p>Classic professional skills</p>
+                        </div>
+                        <div class="ai-option" data-type="random">
+                            <i class="fas fa-random"></i>
+                            <h3>Random Mix</h3>
+                            <p>Surprise me with variety</p>
+                        </div>
+                    </div>
+                    
+                    <button id="generate-courses" class="btn btn-warning" style="background: white; color: var(--primary);">
+                        <i class="fas fa-bolt"></i> Generate Courses
+                    </button>
+                    
+                    <div class="generation-status" id="generation-status">
+                        <h4>Generating Courses...</h4>
+                        <div class="status-bar">
+                            <div class="status-progress" id="status-progress"></div>
+                        </div>
+                        <p id="status-text">Initializing AI engine...</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">AI Generated Courses</h2>
+                        <span class="badge badge-primary" id="generated-count">0 courses</span>
+                    </div>
+                    <div id="ai-courses" class="course-grid">
+                        <!-- AI generated courses will appear here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Course Analytics</h2>
+                    </div>
+                    <p>Track your course performance, student engagement, and revenue metrics.</p>
+                    
+                    <div class="stats-grid" style="margin-top: 20px;">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(67, 97, 238, 0.1); color: var(--primary);">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>12,458</h3>
+                                <p>Total Views</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(75, 181, 67, 0.1); color: var(--success);">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>8,742</h3>
+                                <p>Video Plays</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(255, 204, 0, 0.1); color: #b38f00;">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>64%</h3>
+                                <p>Completion Rate</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(220, 53, 69, 0.1); color: var(--danger);">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>$12,847</h3>
+                                <p>Total Revenue</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Students Section -->
+            <section id="students" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Student Management</h2>
+                    </div>
+                    <p>Manage your students, track their progress, and communicate with them.</p>
+                    
+                    <div class="card" style="margin-top: 20px;">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Enrollments</h3>
+                        </div>
+                        <ul class="activity-list">
+                            <li class="activity-item">
+                                <div class="activity-icon" style="background: var(--primary);">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="activity-text">Alex Johnson enrolled in "Advanced Web Development"</p>
+                                    <span class="activity-time">Today</span>
+                                </div>
+                            </li>
+                            <li class="activity-item">
+                                <div class="activity-icon" style="background: var(--success);">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="activity-text">Maria Garcia enrolled in "AI & Machine Learning"</p>
+                                    <span class="activity-time">Yesterday</span>
+                                </div>
+                            </li>
+                            <li class="activity-item">
+                                <div class="activity-icon" style="background: var(--accent);">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="activity-text">David Smith enrolled in "Data Science Fundamentals"</p>
+                                    <span class="activity-time">2 days ago</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Account Settings</h2>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Display Name</label>
+                        <input type="text" class="form-control" value="Course Creator Pro">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-control" value="creator@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Bio</label>
+                        <textarea class="form-control" rows="4">Professional course creator with expertise in technology and education.</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">AI Generation Preferences</label>
+                        <select class="form-control">
+                            <option>Balanced (Recommended)</option>
+                            <option>More Creative</option>
+                            <option>More Factual</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary"><i class="fas fa-save"></i> Save Settings</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Course data storage
+        let courses = [];
+        let aiGeneratedCourses = [];
+
+        // DOM Elements
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section');
+        const aiOptions = document.querySelectorAll('.ai-option');
+        const generateBtn = document.getElementById('generate-courses');
+        const generationStatus = document.getElementById('generation-status');
+        const statusProgress = document.getElementById('status-progress');
+        const statusText = document.getElementById('status-text');
+        const courseForm = document.getElementById('course-form');
+        const recentCoursesContainer = document.getElementById('recent-courses');
+        const allCoursesContainer = document.getElementById('all-courses');
+        const aiCoursesContainer = document.getElementById('ai-courses');
+        const generatedCount = document.getElementById('generated-count');
+        const totalCoursesEl = document.getElementById('total-courses');
+        const totalStudentsEl = document.getElementById('total-students');
+        const avgRatingEl = document.getElementById('avg-rating');
+        const completionRateEl = document.getElementById('completion-rate');
+
+        // Course templates for AI generation
+        const courseTemplates = {
+            trending: [
+                { title: "Web3 Development Mastery", description: "Learn blockchain, smart contracts, and dApp development from scratch", category: "web", icon: "fas fa-cube" },
+                { title: "AI Prompt Engineering", description: "Master the art of crafting effective prompts for AI models", category: "ai", icon: "fas fa-keyboard" },
+                { title: "Cybersecurity Fundamentals", description: "Protect systems and networks from digital attacks", category: "other", icon: "fas fa-shield-alt" },
+                { title: "Cloud Computing with AWS", description: "Deploy and manage applications on Amazon Web Services", category: "web", icon: "fas fa-cloud" },
+                { title: "Data Analytics with Python", description: "Analyze and visualize data using Python libraries", category: "data", icon: "fas fa-chart-bar" }
+            ],
+            rare: [
+                { title: "Quantum Computing Basics", description: "Introduction to quantum algorithms and quantum programming", category: "other", icon: "fas fa-atom" },
+                { title: "Bioinformatics Programming", description: "Apply programming skills to biological data analysis", category: "data", icon: "fas fa-dna" },
+                { title: "Digital Forensics", description: "Investigate digital crimes and recover hidden data", category: "other", icon: "fas fa-search" },
+                { title: "Robotics Programming", description: "Program autonomous robots and automation systems", category: "other", icon: "fas fa-robot" },
+                { title: "Ethical Hacking", description: "Learn penetration testing and security assessment", category: "other", icon: "fas fa-user-secret" }
+            ],
+            traditional: [
+                { title: "Woodworking Masterclass", description: "From basic carpentry to fine furniture making", category: "other", icon: "fas fa-hammer" },
+                { title: "Electrical Systems", description: "Residential and commercial electrical installation", category: "other", icon: "fas fa-bolt" },
+                { title: "Plumbing Fundamentals", description: "Install and maintain plumbing systems", category: "other", icon: "fas fa-faucet" },
+                { title: "HVAC Technician Training", description: "Heating, ventilation, and air conditioning systems", category: "other", icon: "fas fa-wind" },
+                { title: "Automotive Repair", description: "Diagnose and fix common car problems", category: "other", icon: "fas fa-car" }
+            ],
+            random: [
+                { title: "Digital Marketing Strategy", description: "Create effective online marketing campaigns", category: "business", icon: "fas fa-bullhorn" },
+                { title: "Mobile App Development", description: "Build iOS and Android apps with React Native", category: "mobile", icon: "fas fa-mobile-alt" },
+                { title: "UX/UI Design Principles", description: "Create user-friendly interfaces and experiences", category: "design", icon: "fas fa-paint-brush" },
+                { title: "Personal Finance Management", description: "Take control of your financial future", category: "business", icon: "fas fa-chart-line" },
+                { title: "Public Speaking Mastery", description: "Communicate confidently in any situation", category: "business", icon: "fas fa-microphone" }
+            ]
+        };
+
+        // Initialize the application
+        function init() {
+            // Add event listeners
+            hamburger.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', closeSidebar);
+            generateBtn.addEventListener('click', generateAICourses);
+            courseForm.addEventListener('submit', handleCourseSubmit);
+            
+            // Add event listeners to navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', handleNavigation);
+            });
+            
+            // Add event listeners to AI options
+            aiOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    aiOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                });
+            });
+            
+            // Load initial courses
+            loadInitialCourses();
+            
+            // Update stats
+            updateStats();
+        }
+
+        // Navigation handler
+        function handleNavigation(e) {
+            e.preventDefault();
+            const targetSection = this.getAttribute('data-section');
+            
+            // Update active nav link
+            navLinks.forEach(link => link.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show target section
+            contentSections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === targetSection) {
+                    section.classList.add('active');
+                }
+            });
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 992) {
+                closeSidebar();
+            }
+        }
+
+        // Sidebar functions
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // Load initial courses
+        function loadInitialCourses() {
+            const initialCourses = [
+                {
+                    id: 1,
+                    title: "Advanced Web Development",
+                    description: "Learn modern web development with React, Node.js, and MongoDB",
+                    category: "web",
+                    icon: "fas fa-code",
+                    students: 342,
+                    rating: 4.9,
+                    progress: 75
+                },
+                {
+                    id: 2,
+                    title: "AI & Machine Learning",
+                    description: "Comprehensive guide to AI and ML concepts with Python",
+                    category: "ai",
+                    icon: "fas fa-robot",
+                    students: 215,
+                    rating: 4.7,
+                    progress: 60
+                },
+                {
+                    id: 3,
+                    title: "Data Science Fundamentals",
+                    description: "Master data analysis, visualization, and machine learning",
+                    category: "data",
+                    icon: "fas fa-chart-line",
+                    students: 189,
+                    rating: 4.8,
+                    progress: 45
+                }
+            ];
+            
+            courses = [...initialCourses];
+            renderCourses();
+        }
+
+        // Render courses to the UI
+        function renderCourses() {
+            // Clear containers
+            recentCoursesContainer.innerHTML = '';
+            allCoursesContainer.innerHTML = '';
+            aiCoursesContainer.innerHTML = '';
+            
+            // Render recent courses (first 2)
+            courses.slice(0, 2).forEach(course => {
+                recentCoursesContainer.appendChild(createCourseCard(course));
+            });
+            
+            // Render all courses
+            courses.forEach(course => {
+                allCoursesContainer.appendChild(createCourseCard(course));
+            });
+            
+            // Render AI generated courses
+            aiGeneratedCourses.forEach(course => {
+                aiCoursesContainer.appendChild(createCourseCard(course));
+            });
+            
+            // Update generated count
+            generatedCount.textContent = `${aiGeneratedCourses.length} courses`;
+        }
+
+        // Create course card element
+        function createCourseCard(course) {
+            const card = document.createElement('div');
+            card.className = 'course-card';
+            
+            card.innerHTML = `
+                <div class="course-image">
+                    <i class="${course.icon}"></i>
+                </div>
+                <div class="course-content">
+                    <h3 class="course-title">${course.title}</h3>
+                    <p class="course-description">${course.description}</p>
+                    <div class="course-meta">
+                        <span><i class="fas fa-users"></i> ${course.students} students</span>
+                        <span><i class="fas fa-star"></i> ${course.rating}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: ${course.progress}%;"></div>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Handle course form submission
+        function handleCourseSubmit(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('course-title').value;
+            const description = document.getElementById('course-description').value;
+            const category = document.getElementById('course-category').value;
+            const level = document.getElementById('course-level').value;
+            
+            const newCourse = {
+                id: courses.length + 1,
+                title,
+                description,
+                category,
+                level,
+                icon: getCategoryIcon(category),
+                students: Math.floor(Math.random() * 100) + 50,
+                rating: (Math.random() * 0.5 + 4.5).toFixed(1),
+                progress: Math.floor(Math.random() * 30) + 20
+            };
+            
+            courses.unshift(newCourse);
+            renderCourses();
+            updateStats();
+            
+            // Reset form
+            courseForm.reset();
+            
+            // Show success message
+            alert('Course created successfully!');
+        }
+
+        // Get icon based on category
+        function getCategoryIcon(category) {
+            const icons = {
+                web: 'fas fa-code',
+                ai: 'fas fa-robot',
+                data: 'fas fa-chart-line',
+                mobile: 'fas fa-mobile-alt',
+                design: 'fas fa-paint-brush',
+                business: 'fas fa-briefcase',
+                other: 'fas fa-gem'
+            };
+            
+            return icons[category] || 'fas fa-book';
+        }
+
+        // Generate AI courses
+        function generateAICourses() {
+            const selectedOption = document.querySelector('.ai-option.active');
+            const courseType = selectedOption.getAttribute('data-type');
+            const templates = courseTemplates[courseType];
+            
+            // Show generation status
+            generationStatus.style.display = 'block';
+            statusProgress.style.width = '0%';
+            statusText.textContent = 'Initializing AI engine...';
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                statusProgress.style.width = `${progress}%`;
+                
+                if (progress <= 25) {
+                    statusText.textContent = 'Analyzing market trends...';
+                } else if (progress <= 50) {
+                    statusText.textContent = 'Generating course outlines...';
+                } else if (progress <= 75) {
+                    statusText.textContent = 'Creating content modules...';
+                } else {
+                    statusText.textContent = 'Finalizing course materials...';
+                }
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    
+                    // Generate 3 random courses from templates
+                    const newCourses = [];
+                    for (let i = 0; i < 3; i++) {
+                        const template = templates[Math.floor(Math.random() * templates.length)];
+                        const course = {
+                            id: aiGeneratedCourses.length + courses.length + 1,
+                            title: template.title,
+                            description: template.description,
+                            category: template.category,
+                            icon: template.icon,
+                            students: Math.floor(Math.random() * 200) + 50,
+                            rating: (Math.random() * 0.5 + 4.5).toFixed(1),
+                            progress: Math.floor(Math.random() * 40) + 10,
+                            aiGenerated: true
+                        };
+                        newCourses.push(course);
+                    }
+                    
+                    // Add to AI courses and all courses
+                    aiGeneratedCourses = [...aiGeneratedCourses, ...newCourses];
+                    courses = [...courses, ...newCourses];
+                    
+                    // Update UI
+                    renderCourses();
+                    updateStats();
+                    
+                    // Update status
+                    statusText.textContent = 'Courses generated successfully!';
+                    
+                    // Hide status after delay
+                    setTimeout(() => {
+                        generationStatus.style.display = 'none';
+                    }, 2000);
+                }
+            }, 100);
+        }
+
+        // Update dashboard stats
+        function updateStats() {
+            const totalCourses = courses.length + aiGeneratedCourses.length;
+            const totalStudents = courses.reduce((sum, course) => sum + course.students, 0) + 
+                                aiGeneratedCourses.reduce((sum, course) => sum + course.students, 0);
+            
+            // Animate stats
+            animateValue(totalCoursesEl, 0, totalCourses, 1000);
+            animateValue(totalStudentsEl, 0, totalStudents, 1000);
+        }
+
+        // Animate value changes
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = value.toLocaleString();
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Add hover effects to cards
+        function addCardHoverEffects() {
+            const cards = document.querySelectorAll('.card, .course-card, .stat-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-5px)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        }
+
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            addCardHoverEffects();
+        });
+    </script>
+</body>
+</html>
